@@ -12,7 +12,7 @@ export default function Home() {
       <main className={styles.main}>
       <nav>
           <div className={styles.routeContainer}>
-            <Link href="/components/SideBar" className={styles.route}>Ir para NotFound</Link>
+            <Link href="/components/Countries" className={styles.route}>Ir para NotFound</Link>
           </div>
           <div className={styles.routeContainer}>
             <Link href="/components/AuthorityForm" className={styles.route}>Ir para NotFound</Link>
