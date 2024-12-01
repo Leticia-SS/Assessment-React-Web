@@ -1,26 +1,8 @@
-import Link from "next/link";
-import { useState, useEffect } from "react";
+// import Image from "next/image";
 import styles from "./page.module.css";
+import Link from 'next/link'
 
 export default function Home() {
-  const [theme, setTheme] = useState("light");
-
-  useEffect(() => {
-    const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
-
-    const savedTheme = localStorage.getItem("theme") || systemTheme;
-    setTheme(savedTheme);
-    document.documentElement.setAttribute("data-theme", savedTheme);
-  }, []);
-
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
-    document.documentElement.setAttribute("data-theme", newTheme);
-  };
 
   return (
     <div className={styles.page}>
@@ -28,22 +10,26 @@ export default function Home() {
         <div className={styles.headerImg}></div>
       </header>
       <main className={styles.main}>
-        <div className={styles.buttons}>
-          <Link href="/Agenda">
-            <button className={styles.navButton}>Agenda</button>
-          </Link>
-          <Link href="/AuthorityForm">
-            <button className={styles.navButton}>Authority Form</button>
-          </Link>
-          <Link href="/SideBar">
-            <button className={styles.navButton}>Sidebar</button>
-          </Link>
-        </div>
+      <nav>
+          <div className={styles.routeContainer}>
+            <Link href="/components/SideBar" className={styles.route}>Ir para NotFound</Link>
+          </div>
+          <div className={styles.routeContainer}>
+            <Link href="/components/AuthorityForm" className={styles.route}>Ir para NotFound</Link>
+          </div>
+          <div className={styles.routeContainer}>
+            <Link href="/components/Agenda" className={styles.route}>Ir para NotFound</Link>
+          </div>
+        </nav>
       </main>
       <footer className={styles.footer}>
-        <button onClick={toggleTheme} className={styles.themeToggle}>
-          {theme === "light" ? "🌙" : "☀️"}
-        </button>
+        <a
+          href="https://github.com/Leticia-SS/Assessment-React-Web"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Acesse o repositório deste projeto
+        </a>
       </footer>
     </div>
   );

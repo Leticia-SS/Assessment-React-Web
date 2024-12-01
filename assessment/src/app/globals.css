@@ -1,7 +1,7 @@
 :root {
   --background: #E6F4EA;
   --foreground: #002855;
-  --link-color: #FFCC00;
+  --link-color: #21BD4E;
 }
 
 @media (prefers-color-scheme: dark) {
