@@ -1,7 +1,7 @@
 :root {
   --background: #E6F4EA;
   --foreground: #002855;
-  --link-color: #21BD4E;
+  --link-color: #1BB143;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -43,3 +43,40 @@ a {
   }
 }
 
+
+
+/* Not found estilização */
+.notFoundContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+  background-color: var(--background);
+  color: var(--foreground);
+  padding: 20px;
+}
+
+.notFoundContainer h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.notFoundContainer p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.notFoundLink {
+  font-size: 1.2rem;
+  color: var(--link-color);
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.3s ease-in-out;
+}
+
+.notFoundLink:hover {
+  color: var(--foreground);
+}
+/* Fim da estilização do not found */
