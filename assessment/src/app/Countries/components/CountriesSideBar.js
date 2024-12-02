@@ -59,9 +59,10 @@ export default function CountriesSidebar({ onSelectCountry }) {
                 {filteredCountries.map((country) => (
                     <li
                         key={country.name.common}
+                        className={styles.countryItem}
                         style={
                             selectedCountry?.name.common === country.name.common
-                                ? { backgroundColor: 'yellow', fontWeight: 'bold' }
+                                ? { backgroundColor: 'var(--link-color)', fontWeight: 'normal', color: 'var(--background)' }
                                 : {}
                         }
                         onClick={() => handleCountryClick(country)}
