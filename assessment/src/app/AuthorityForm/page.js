@@ -1,10 +1,10 @@
-'use client';
+'use client'
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import styles from './AuthorityForm.module.css';
+import styles from './page.module.css';
 
-const AuthorityForm = () => {
+const AuthorityForm = ({ onSelectCountry }) => { 
     const [authorities, setAuthorities] = useState({});
     const [countries, setCountries] = useState([]);
     const [formData, setFormData] = useState({
@@ -17,7 +17,6 @@ const AuthorityForm = () => {
     const router = useRouter();
 
     useEffect(() => {
-        // Get G20 countries from localStorage or API
         const storedCountries = localStorage.getItem('g20CountriesData');
         if (storedCountries) {
             setCountries(JSON.parse(storedCountries));
@@ -48,28 +47,33 @@ const AuthorityForm = () => {
 
         const { name, country, position, email } = formData;
         
-        // Validations
         if (!name || !country || !position || !email || !emailValid) {
             alert("Todos os campos devem ser preenchidos corretamente!");
             return;
         }
 
-        // Ensure only one authority per position per country
         if (authorities[country]?.[position]) {
             alert(`Já existe uma autoridade com o cargo "${position}" para o país ${country}`);
             return;
         }
 
-        // Add authority
-        setAuthorities(prevAuthorities => ({
-            ...prevAuthorities,
-            [country]: {
-                ...prevAuthorities[country],
-                [position]: { name, email }
-            }
-        }));
+        setAuthorities(prevAuthorities => {
+            const updatedAuthorities = {
+                ...prevAuthorities,
+                [country]: {
+                    ...prevAuthorities[country],
+                    [position]: { name, email }
+                }
+            };
 
-        router.push(`/Countries/${country}`);
+            localStorage.setItem('authoritiesData', JSON.stringify(updatedAuthorities));
+
+            return updatedAuthorities;
+        });
+
+        onSelectCountry(country);
+
+        router.push(`/countries?country=${country}`);
     };
 
     return (

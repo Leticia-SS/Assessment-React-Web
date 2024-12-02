@@ -112,7 +112,47 @@
     margin: 5px 0;
     color: var(--foreground);
   }
+
+  .authorityList{
+    margin: 5px 0;
+    color: var(--foreground);
+  }
   
+  .authorityList {
+    margin: 5px 0;
+    color: var(--foreground);
+    display: grid;
+    gap: 15px;
+  }
+  
+  .authorityItem {
+    background-color: var(--background);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .authorityItem h3 {
+    font-size: 1.2rem;
+    color: var(--highlight);
+    margin: 0;
+    text-align: center;
+  }
+  
+  .authorityItem p {
+    font-size: 1rem;
+    margin: 5px 0;
+    color: var(--foreground);
+    text-align: center;
+  }
+  
+  .authorityItem p strong {
+    font-weight: bold;
+  }
+  
+  .authorityList li {
+    list-style-type: none;
+  }
   
   .activeCountryItem {
     background-color: var(--link-color);
