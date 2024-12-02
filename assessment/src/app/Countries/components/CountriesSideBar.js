@@ -9,6 +9,7 @@ export default function CountriesSidebar({ onSelectCountry }) {
     const [filteredCountries, setFilteredCountries] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCountry, setSelectedCountry] = useState(null);
+    const [selectedRegions, setSelectedRegions] = useState([]);
     const router = useRouter();
 
     const handleBackClick = () => {
@@ -28,8 +29,26 @@ export default function CountriesSidebar({ onSelectCountry }) {
     const handleSearch = (event) => {
         const term = event.target.value.toLowerCase();
         setSearchTerm(term);
+
         const filtered = countries.filter((country) =>
-            country.name.common.toLowerCase().includes(term)
+            country.name.common.toLowerCase().includes(term) &&
+            (selectedRegions.length === 0 || selectedRegions.includes(country.region))
+        );
+        setFilteredCountries(filtered);
+    };
+
+    const handleRegionChange = (region) => {
+        let updatedRegions = [...selectedRegions];
+        if (updatedRegions.includes(region)) {
+            updatedRegions = updatedRegions.filter((r) => r !== region);
+        } else {
+            updatedRegions.push(region);
+        }
+        setSelectedRegions(updatedRegions);
+
+        const filtered = countries.filter((country) =>
+            (updatedRegions.length === 0 || updatedRegions.includes(country.region)) &&
+            country.name.common.toLowerCase().includes(searchTerm)
         );
         setFilteredCountries(filtered);
     };
@@ -39,6 +58,8 @@ export default function CountriesSidebar({ onSelectCountry }) {
         setSelectedCountry(country);
         onSelectCountry(country);
     };
+
+    const uniqueRegions = [...new Set(countries.map((country) => country.region))];
 
     return (
         <div className={styles.sidebar}>
@@ -55,6 +76,20 @@ export default function CountriesSidebar({ onSelectCountry }) {
                 onChange={handleSearch}
                 className={styles.searchBar}
             />
+            <div className={styles.regionSelector}>
+                <p>Filtrar por Região:</p>
+                {uniqueRegions.map((region) => (
+                    <label key={region} className={styles.regionOption}>
+                        <input
+                            type="checkbox"
+                            value={region}
+                            checked={selectedRegions.includes(region)}
+                            onChange={() => handleRegionChange(region)}
+                        />
+                        {region}
+                    </label>
+                ))}
+            </div>
             <ul className={styles.countryList}>
                 {filteredCountries.map((country) => (
                     <li
@@ -66,10 +101,9 @@ export default function CountriesSidebar({ onSelectCountry }) {
                                 : {}
                         }
                         onClick={() => handleCountryClick(country)}
-                        >
+                    >
                         {country.name.common}
                     </li>
-               
                 ))}
             </ul>
         </div>
