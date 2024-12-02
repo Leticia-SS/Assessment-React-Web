@@ -48,13 +48,13 @@ export default function Home() {
       <main className={styles.main}>
         <nav>
           <div className={styles.routeContainer}>
-            <Link href="/Countries" className={styles.route}>Ir para NotFound</Link>
+            <Link href="/Countries" className={styles.route}>Países</Link>
           </div>
           <div className={styles.routeContainer}>
-            <Link href="/AuthorityForm" className={styles.route}>Ir para NotFound</Link>
+            <Link href="/AuthorityForm" className={styles.route}>Autoridades</Link>
           </div>
           <div className={styles.routeContainer}>
-            <Link href="/Agenda" className={styles.route}>Ir para NotFound</Link>
+            <Link href="/Agenda" className={styles.route}>Agenda</Link>
           </div>
         </nav>
       </main>

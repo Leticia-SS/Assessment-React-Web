@@ -1,5 +1,6 @@
 :root {
   --background: #E6F4EA;
+  --background-secondary: #e2fdea;
   --foreground: #001742;
   --link-color: #1c8d3a;
 }
@@ -7,9 +8,9 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #001742;
-    --background-secondary: #002D40;
-    --foreground: #FFE600;
-    --link-color: #FFFFFF; 
+    --background-secondary: #001336;
+    --foreground: #FFFFFF;
+    --link-color: #FFE600; 
   }
 }
 

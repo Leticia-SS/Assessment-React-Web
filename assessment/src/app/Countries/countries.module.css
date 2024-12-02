@@ -5,8 +5,7 @@
   
   .sidebar {
     width: 300px;
-    background-color: var(--background);
-    border-right: 1px solid var(--foreground);
+    background-color: var(--background-secondary);
     padding: 1rem;
     overflow-y: auto;
   }
@@ -44,6 +43,10 @@
     padding: 0;
     margin: 0;
   }
+
+  .countryFlag{
+    width: 600px;
+  }
   
   .countryItem {
     padding: 0.5rem 1rem;
@@ -78,4 +81,10 @@
     color: var(--foreground);
   }
   
+  .activeCountryItem {
+    background-color: var(--link-color);
+    color: var(--background);
+    font-weight: bold;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
   

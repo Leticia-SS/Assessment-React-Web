@@ -10,7 +10,7 @@ export default function CountriesPage() {
   
     return (
       <div className={styles.countriesPage}>
-        <CountriesSidebar onSelectCountry={setSelectedCountry} />
+        <CountriesSidebar onSelectCountry={setSelectedCountry} selectedCountry={selectedCountry}/>
         <main className={styles.main}>
           {selectedCountry && <CountryDetails country={selectedCountry} />}
         </main>
