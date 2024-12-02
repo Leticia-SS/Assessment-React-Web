@@ -77,7 +77,7 @@ export default function CountriesSidebar({ onSelectCountry }) {
                 className={styles.searchBar}
             />
             <div className={styles.regionSelector}>
-                <p>Filtrar por Região:</p>
+                <p className={styles.regionTitle}>Filtrar por Região:</p>
                 {uniqueRegions.map((region) => (
                     <label key={region} className={styles.regionOption}>
                         <input

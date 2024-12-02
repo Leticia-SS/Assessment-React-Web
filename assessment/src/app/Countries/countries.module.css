@@ -71,15 +71,48 @@
   }
   
   .countryDetails {
-    max-width: 600px;
-    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 50px 1fr 2fr;
+    gap: 20px;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    background: var(--background-secondary);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
   }
   
   .countryName {
-    font-size: 2rem;
-    margin-bottom: 1rem;
+    font-size: 2.5rem;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .countryFlag {
+    width: 100%;
+    height: auto;
+    max-width: 700px;
+    margin: 0 auto;
+    border: 2px solid var(--foreground);
+    border-radius: 5px;
+  }
+  
+  .countryInfo {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    font-size: 1.1rem;
+    text-align: center;
+    align-items: center;
+  }
+  
+  .countryInfo p {
+    margin: 5px 0;
     color: var(--foreground);
   }
+  
   
   .activeCountryItem {
     background-color: var(--link-color);
@@ -87,4 +120,40 @@
     font-weight: bold;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
+  
+.regionSelector {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--foreground);
+    border-radius: 5px;
+    background-color: var(--background);
+    color: var(--foreground);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .regionOption {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0;
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--foreground);
+  }
+  
+  .regionOption input[type="checkbox"] {
+    margin-right: 0.5rem;
+    transform: scale(1.2);
+  }
+
+  .regionTitle{
+    color: var(--foreground);
+    padding: 5px;
+    font-size: 14px;
+  }
+  
+  .regionOption input[type="checkbox"]:checked {
+    background-color: var(--link-color);
+  }
   

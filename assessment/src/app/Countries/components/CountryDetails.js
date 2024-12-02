@@ -13,10 +13,12 @@ export default function CountryDetails({ country }) {
         alt={`Bandeira de ${country.name.common}`} 
         className={styles.countryFlag} 
       />
-      <p><strong>Capital:</strong> {country.capital}</p>
-      <p><strong>Região:</strong> {country.region}</p>
-      <p><strong>Idioma:</strong> {Object.values(country.languages)[0]}</p>
-      <p><strong>Top-Level Domain:</strong> {country.tld[0]}</p>
+      <div className={styles.countryInfo}>
+        <p><strong>Capital:</strong> {country.capital}</p>
+        <p><strong>Região:</strong> {country.region}</p>
+        <p><strong>Idioma:</strong> {Object.values(country.languages)[0]}</p>
+        <p><strong>Top-Level Domain:</strong> {country.tld[0]}</p>
+      </div>
     </div>
   );
 }
