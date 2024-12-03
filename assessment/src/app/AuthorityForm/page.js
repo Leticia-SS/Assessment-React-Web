@@ -112,8 +112,8 @@ export default function AuthorityForm() {
         >
           <option value="">Selecione um país</option>
           {countries.map((country) => (
-            <option key={country.name} value={country.name}>
-              {country.name}
+            <option key={country.cca2} value={country.name.common}>
+              {country.name.common}
             </option>
           ))}
         </select>
