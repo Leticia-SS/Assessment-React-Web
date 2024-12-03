@@ -1,150 +1,159 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import styles from './page.module.css';
+import './page.module.css';
 
-const AuthorityForm = ({ onSelectCountry }) => { 
-    const [authorities, setAuthorities] = useState({});
-    const [countries, setCountries] = useState([]);
-    const [formData, setFormData] = useState({
-        name: '',
-        country: '',
-        position: '',
-        email: ''
-    });
-    const [emailValid, setEmailValid] = useState(true);
-    const router = useRouter();
+const positions = ['Chefe de Estado', 'Ministro de Finanças', 'Presidente de Banco Central'];
 
-    useEffect(() => {
-        const storedCountries = localStorage.getItem('g20CountriesData');
-        if (storedCountries) {
-            setCountries(JSON.parse(storedCountries));
-        }
-    }, []);
+export default function AuthorityForm() {
+  const [countries, setCountries] = useState([]);
+  const [authorities, setAuthorities] = useState([]);
+  const [formData, setFormData] = useState({
+    name: '',
+    country: '',
+    position: '',
+    email: '',
+  });
+  const [errors, setErrors] = useState({});
 
-    const validateEmail = (email, tld) => {
-        const domain = email.split('@')[1];
-        return domain.endsWith(tld);
-    };
+  useEffect(() => {
+    const storedCountries = localStorage.getItem('g20CountriesData');
+    const storedAuthorities = localStorage.getItem('authorities');
+    if (storedCountries) {
+      const parsedCountries = JSON.parse(storedCountries);
+      console.log("Países carregados:", parsedCountries);
+      setCountries(parsedCountries);
+    }
+    if (storedAuthorities) {
+      const parsedAuthorities = JSON.parse(storedAuthorities);
+      console.log("Autoridades carregadas:", parsedAuthorities);
+      setAuthorities(parsedAuthorities);
+    }
+  }, []);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value
-        });
+  const validateForm = () => {
+    const newErrors = {};
 
-        if (name === 'email') {
-            const selectedCountry = countries.find(country => country.name.common === formData.country);
-            const tld = selectedCountry?.tld[0] || '';
-            setEmailValid(validateEmail(value, tld));
-        }
-    };
+    if (!formData.name.trim() || formData.name.split(' ').length < 2) {
+      newErrors.name = 'Digite o nome completo';
+    }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    if (!formData.country) {
+      newErrors.country = 'Selecione um país';
+    }
 
-        const { name, country, position, email } = formData;
-        
-        if (!name || !country || !position || !email || !emailValid) {
-            alert("Todos os campos devem ser preenchidos corretamente!");
-            return;
-        }
+    if (!formData.position) {
+      newErrors.position = 'Selecione um cargo';
+    } else {
+      const existingAuthority = authorities.find(
+        (auth) => auth.country === formData.country && auth.position === formData.position
+      );
+      if (existingAuthority) {
+        newErrors.position = 'Essa posição já existe para este país';
+      }
+    }
 
-        if (authorities[country]?.[position]) {
-            alert(`Já existe uma autoridade com o cargo "${position}" para o país ${country}`);
-            return;
-        }
+    if (!formData.email) {
+      newErrors.email = 'Digite um email';
+    } else {
+      const country = countries.find((c) => c.name === formData.country);
+      if (country && !formData.email.endsWith(`.${country.tld}`)) {
+        newErrors.email = `Email deve terminar com .${country.tld}`;
+      }
+    }
 
-        setAuthorities(prevAuthorities => {
-            const updatedAuthorities = {
-                ...prevAuthorities,
-                [country]: {
-                    ...prevAuthorities[country],
-                    [position]: { name, email }
-                }
-            };
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
-            localStorage.setItem('authoritiesData', JSON.stringify(updatedAuthorities));
+  const saveAuthority = (authority) => {
+    const updatedAuthorities = [...authorities, authority];
+    setAuthorities(updatedAuthorities);
+    localStorage.setItem('authorities', JSON.stringify(updatedAuthorities));
+  };
 
-            return updatedAuthorities;
-        });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      saveAuthority(formData);
+      setFormData({ name: '', country: '', position: '', email: '' });
+      alert('Autoridade Salva!');
+    }
+  };
 
-        onSelectCountry(country);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
-        router.push(`/countries?country=${country}`);
-    };
+  return (
+    <form onSubmit={handleSubmit} className="authority-form">
+      <div className="form-group">
+        <label htmlFor="name">Nome da autoridade</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+        />
+        {errors.name && <p className="error">{errors.name}</p>}
+      </div>
 
-    return (
-        <div className={styles.container}>
-            <h1>Cadastrar Autoridade</h1>
-            <form onSubmit={handleSubmit}>
-                <div className={styles.formGroup}>
-                    <label htmlFor="name">Nome da Autoridade</label>
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        required
-                    />
-                </div>
+      <div className="form-group">
+        <label htmlFor="country">País representado</label>
+        <select
+          id="country"
+          name="country"
+          value={formData.country}
+          onChange={handleChange}
+          required
+        >
+          <option value="">Selecione um país</option>
+          {countries.map((country) => (
+            <option key={country.name} value={country.name}>
+              {country.name}
+            </option>
+          ))}
+        </select>
+        {errors.country && <p className="error">{errors.country}</p>}
+      </div>
 
-                <div className={styles.formGroup}>
-                    <label htmlFor="country">País Representado</label>
-                    <select
-                        id="country"
-                        name="country"
-                        value={formData.country}
-                        onChange={handleChange}
-                        required
-                    >
-                        <option value="">Selecione um País</option>
-                        {countries.map(country => (
-                            <option key={country.name.common} value={country.name.common}>
-                                {country.name.common}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+      <div className="form-group">
+        <label htmlFor="position">Cargo/função</label>
+        <select
+          id="position"
+          name="position"
+          value={formData.position}
+          onChange={handleChange}
+          required
+        >
+          <option value="">Selecione um cargo</option>
+          {positions.map((position) => (
+            <option key={position} value={position}>
+              {position}
+            </option>
+          ))}
+        </select>
+        {errors.position && <p className="error">{errors.position}</p>}
+      </div>
 
-                <div className={styles.formGroup}>
-                    <label htmlFor="position">Cargo/Função</label>
-                    <select
-                        id="position"
-                        name="position"
-                        value={formData.position}
-                        onChange={handleChange}
-                        required
-                    >
-                        <option value="">Selecione um Cargo</option>
-                        {['Chefe de Estado', 'Ministros de Finança', 'Presidente de Banco Central'].map(position => (
-                            <option key={position} value={position}>
-                                {position}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+      <div className="form-group">
+        <label htmlFor="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
+        {errors.email && <p className="error">{errors.email}</p>}
+      </div>
 
-                <div className={styles.formGroup}>
-                    <label htmlFor="email">Email</label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                    />
-                    {!emailValid && <span className={styles.error}>O domínio do email deve corresponder ao TLD do país selecionado.</span>}
-                </div>
+      <button type="submit" className="submit-button">Salvar</button>
+    </form>
+  );
+}
 
-                <button type="submit" className={styles.submitButton}>Cadastrar</button>
-            </form>
-        </div>
-    );
-};
-
-export default AuthorityForm;
