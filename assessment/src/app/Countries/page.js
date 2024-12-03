@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import CountriesSidebar from './components/CountriesSidebar';
+import CountriesSidebar from './components/CountriesSideBar';
 import CountryDetails from './components/CountryDetails';
 import styles from './countries.module.css';
 

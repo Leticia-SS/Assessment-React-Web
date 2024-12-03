@@ -1,11 +1,17 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import './page.module.css';
+import { useRouter } from 'next/navigation';
+import styles from './authority.module.css';
 
-const positions = ['Chefe de Estado', 'Ministro de Finanças', 'Presidente de Banco Central'];
+const positions = [
+  'Chefe de Estado', 
+  'Ministro de Finanças', 
+  'Presidente de Banco Central',
+];
 
 export default function AuthorityForm() {
+  const router = useRouter();
   const [countries, setCountries] = useState([]);
   const [authorities, setAuthorities] = useState([]);
   const [formData, setFormData] = useState({
@@ -17,25 +23,32 @@ export default function AuthorityForm() {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    const storedCountries = localStorage.getItem('g20CountriesData');
-    const storedAuthorities = localStorage.getItem('authorities');
-    if (storedCountries) {
-      const parsedCountries = JSON.parse(storedCountries);
-      console.log("Países carregados:", parsedCountries);
-      setCountries(parsedCountries);
-    }
-    if (storedAuthorities) {
-      const parsedAuthorities = JSON.parse(storedAuthorities);
-      console.log("Autoridades carregadas:", parsedAuthorities);
-      setAuthorities(parsedAuthorities);
+    if (typeof window !== 'undefined') {
+      const storedCountries = localStorage.getItem('g20CountriesData');
+      const storedAuthorities = localStorage.getItem('authorities');
+      
+      if (storedCountries) {
+        const parsedCountries = JSON.parse(storedCountries);
+        setCountries(parsedCountries);
+      }
+      
+      if (storedAuthorities) {
+        const parsedAuthorities = JSON.parse(storedAuthorities);
+        setAuthorities(parsedAuthorities);
+      }
     }
   }, []);
 
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.name.trim() || formData.name.split(' ').length < 2) {
-      newErrors.name = 'Digite o nome completo';
+    if (!formData.name.trim()) {
+      newErrors.name = 'Nome é obrigatório';
+    } else {
+      const nameParts = formData.name.trim().split(' ');
+      if (nameParts.length < 2) {
+        newErrors.name = 'Digite nome completo (primeiro e último nome)';
+      }
     }
 
     if (!formData.country) {
@@ -54,11 +67,11 @@ export default function AuthorityForm() {
     }
 
     if (!formData.email) {
-      newErrors.email = 'Digite um email';
+      newErrors.email = 'Email é obrigatório';
     } else {
-      const country = countries.find((c) => c.name === formData.country);
-      if (country && !formData.email.endsWith(`.${country.tld}`)) {
-        newErrors.email = `Email deve terminar com .${country.tld}`;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        newErrors.email = 'Formato de email inválido';
       }
     }
 
@@ -76,19 +89,22 @@ export default function AuthorityForm() {
     e.preventDefault();
     if (validateForm()) {
       saveAuthority(formData);
-      setFormData({ name: '', country: '', position: '', email: '' });
-      alert('Autoridade Salva!');
+      router.push('/Countries', { state: { selectedCountry: formData.country } });
     }
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="authority-form">
-      <div className="form-group">
+    <form onSubmit={handleSubmit} className={styles['authority-form']}>
+      <div className={styles['form-group']}>
         <label htmlFor="name">Nome da autoridade</label>
         <input
           type="text"
@@ -96,19 +112,18 @@ export default function AuthorityForm() {
           name="name"
           value={formData.name}
           onChange={handleChange}
-          required
+          placeholder="Nome completo"
         />
-        {errors.name && <p className="error">{errors.name}</p>}
+        {errors.name && <p className={styles.error}>{errors.name}</p>}
       </div>
 
-      <div className="form-group">
+      <div className={styles['form-group']}>
         <label htmlFor="country">País representado</label>
         <select
           id="country"
           name="country"
           value={formData.country}
           onChange={handleChange}
-          required
         >
           <option value="">Selecione um país</option>
           {countries.map((country) => (
@@ -117,17 +132,16 @@ export default function AuthorityForm() {
             </option>
           ))}
         </select>
-        {errors.country && <p className="error">{errors.country}</p>}
+        {errors.country && <p className={styles.error}>{errors.country}</p>}
       </div>
 
-      <div className="form-group">
+      <div className={styles['form-group']}>
         <label htmlFor="position">Cargo/função</label>
         <select
           id="position"
           name="position"
           value={formData.position}
           onChange={handleChange}
-          required
         >
           <option value="">Selecione um cargo</option>
           {positions.map((position) => (
@@ -136,10 +150,10 @@ export default function AuthorityForm() {
             </option>
           ))}
         </select>
-        {errors.position && <p className="error">{errors.position}</p>}
+        {errors.position && <p className={styles.error}>{errors.position}</p>}
       </div>
 
-      <div className="form-group">
+      <div className={styles['form-group']}>
         <label htmlFor="email">Email</label>
         <input
           type="email"
@@ -147,13 +161,12 @@ export default function AuthorityForm() {
           name="email"
           value={formData.email}
           onChange={handleChange}
-          required
+          placeholder="exemplo@pais.tld"
         />
-        {errors.email && <p className="error">{errors.email}</p>}
+        {errors.email && <p className={styles.error}>{errors.email}</p>}
       </div>
 
-      <button type="submit" className="submit-button">Salvar</button>
+      <button type="submit" className={styles['submit-button']}>Salvar</button>
     </form>
   );
 }
-
